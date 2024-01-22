@@ -1,11 +1,20 @@
-let navOffset = $("nav").innerHeight();
+gsap.registerPlugin(ScrollToPlugin);
+let navOffset = document.querySelector("nav").offsetHeight+10;
+console.log(navOffset);
 
-$(document).ready(function(e){
-    $("body,html").animate({scrollTop:0},100, "easeInOutQuad");
-});
+gsap.to(document.querySelector("body"),
+    {scrollTop:0, duration:.1, ease:"power2.inOut"}
+);
 
-$("nav a[href^='#']").click(function(e){
+let navElements = document.querySelectorAll("nav a[href^='#']");
+navElements.forEach(el => el.addEventListener("click", navClickAction));
+
+function navClickAction(e){
     e.preventDefault();
-    let idPosNav = $($(this).attr("href")).offset().top - navOffset;
-    $("body,html").animate({scrollTop:idPosNav}, 1000, "easeInOutQuad");
-});
+    let hrefAttr = e.target.getAttribute("href");
+    console.log(document.querySelector(hrefAttr).offsetTop);
+    let scrollToVal =document.querySelector(hrefAttr).offsetTop -navOffset;
+    gsap.to(window, 
+        {scrollTo:{y: scrollToVal}, duration: 1, ease:"circ.out"}
+    );
+}
